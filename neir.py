@@ -27,11 +27,13 @@ def train_we(train,lr,n_epoch):
     return weights, delta #list of weights, deltas
 
 #random points
-dataset = [[0]*4]*10
-x1 = [0.03, 0.57, 0.62, 0.55, 0.67, 0.73, 0.18, 0.62, 0.16, 0.69]
-x2 = [0.54, 0.32, 0.11, 0.94, 0.33, 0.04, 0.15, 0.43, 0.51, 0.18]
-x3 = [0.76,  0.48, -0.28,  -0.13, 0.33, 0.35, -0.63, 0.95, -0.89, 0.03]
-x4 = [ 0.03, 0.01, -0.33, 0.74, -0.47, -0.46, 0.04, -0.37,  0.31,  0.08]
+N = 10
+dataset = [[0]*4]*N
+
+x1 = np.random.random(N)
+x2 = x1 + [np.random.randint(10)/10 for i in range(N)]
+x3 = np.random.random(N)
+x4 = x3 - [np.random.randint(10)/10 for i in range(N)] - 0.1
 
 for i in range(10):
     if i < 5:
@@ -47,6 +49,23 @@ weights, delta =train_we(dataset,l_rate,n_epoch) #final weight and bias
 for row in dataset:
     predictit= predict(row,weights,delta)
     print('selected:%d , predicted:%d ' % (row[-1],predictit))
+
+#dividing points into 2 groups and creating a graph
+for row in dataset:
+    if row[-1] == 1:
+        plt.scatter(row[1],row[2],s=10, c='red')
+    else:
+        plt.scatter(row[1],row[2],s=10, c='blue')
+
+#line separating the classes
+def line(x1,weights):
+    return ((weights[1]*x1)/-weights[2])-(weights[0]/weights[2])
+
+#plots a line using the given weights on a graph
+x1_range = np.arange(-5,5,0.5)
+plt.plot(x1_range, line(x1_range, weights), color='black')
+plt.grid(True)
+plt.show()
 
 
         
